@@ -14,6 +14,17 @@ A lean starting point for internal tool UIs: Vue 3 + LESS + WebSocket, no build 
 python3 -m http.server 8080    # then open http://localhost:8080
 ```
 
+For a fuller test with a real WebSocket backend, use `template/test_server.py`:
+
+```
+pip install aiohttp
+cd template
+python3 test_server.py    # serves www/ at /app/ and WebSocket at ws://localhost:8080/app.ws
+```
+
+Open `http://localhost:8080/app/`. The server sends a `meta` message on connect
+and responds to `ping` with a `pong`.
+
 ---
 
 ## File Overview
