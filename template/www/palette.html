@@ -503,7 +503,7 @@ function copyOutput() {
 
 async function loadFromLess() {
     try {
-        const text = await fetch('css/const.less').then(r => r.text());
+        const text = await fetch('css/const.less', { cache: 'reload' }).then(r => r.text());
         const num  = (re) => { const m = text.match(re); return m ? +m[1] : null; };
 
         const hue  = num(/@hue\s*:\s*(\d+)/);
