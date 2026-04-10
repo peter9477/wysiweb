@@ -501,7 +501,27 @@ function copyOutput() {
         });
 }
 
-render();
+async function loadFromLess() {
+    try {
+        const text = await fetch('css/const.less').then(r => r.text());
+        const num  = (re) => { const m = text.match(re); return m ? +m[1] : null; };
+
+        const hue  = num(/@hue\s*:\s*(\d+)/);
+        const pSat = num(/@primary\s*:\s*hsl\([^,]+,\s*(\d+)%/);
+        const pL   = num(/@primary\s*:\s*hsl\([^,]+,\s*\d+%\s*,\s*(\d+)%/);
+        const nSat = num(/@neutral\s*:\s*hsl\([^,]+,\s*(\d+)%/);
+        const nL   = num(/@neutral\s*:\s*hsl\([^,]+,\s*\d+%\s*,\s*(\d+)%/);
+
+        if (hue  != null) { document.getElementById('hue-slider').value  = hue;  }
+        if (pSat != null) { document.getElementById('psat-slider').value = pSat; }
+        if (pL   != null) { document.getElementById('pl-slider').value   = pL;   }
+        if (nSat != null) { document.getElementById('nsat-slider').value = nSat; }
+        if (nL   != null) { document.getElementById('nl-slider').value   = nL;   }
+    } catch { /* leave defaults in place */ }
+    render();
+}
+
+loadFromLess();
 </script>
 
 </body>
