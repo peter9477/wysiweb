@@ -1,0 +1,4 @@
+nonrepo_/
+__pycache__/
+*.py[cod]
+.env

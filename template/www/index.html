@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,
+          maximum-scale=1.0, user-scalable=no">
+    <!-- NOTE: Remove user-scalable=no if pinch-zoom is wanted on mobile -->
+
+    <title>APP_NAME</title>
+    <!-- data:, suppresses the browser's automatic favicon 404 request.
+         Replace with a real <link rel="icon" href="favicon.ico"> when you have one. -->
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet/less" href="css/style.less">
+    <script>less = { errorReporting: 'console' };</script>
+    <script src="js/less.min.js"></script>
+
+    <style>
+        /* Hide Vue templates until compiled, preventing flash of raw {{}} markup. */
+        [v-cloak] { display: none; }
+    </style>
+</head>
+
+<body>
+<div id="vue-root" class="app-root" v-cloak>
+
+    <!-- Dev-mode layout debugger: click to toggle dashed borders on all elements. -->
+    <div v-if="dev" id="hiliter" onclick="document.body.classList.toggle('hilite')"></div>
+
+    <header class="app-header hbox">
+        <span class="app-title">
+            <i class="fas" :class="connected ? 'fa-thumbs-up success' : 'fa-thumbs-down danger'"></i>
+            APP_NAME
+            <span class="app-version" :class="{disabled: !connected}">
+                <template v-if="version">v{{version}}</template>
+            </span>
+        </span>
+
+        <span v-if="connState === 'connecting'"   class="text-muted">&nbsp;connecting…</span>
+        <span v-if="connState === 'reconnecting'" class="warning">&nbsp;reconnecting…</span>
+        <span v-if="connState === 'disconnected'" class="danger">
+            &nbsp;disconnected &mdash;
+            <button @click="onReconnect">Reconnect</button>
+        </span>
+
+        <div class="push-right hbox" style="gap:0.4em">
+            <span class="text-muted">{{hostname}}</span>
+            <button v-if="dev" class="dark-toggle" @click="onReload" title="Force reload (dev)">
+                <i class="fas fa-rotate-right"></i>
+            </button>
+            <button class="dark-toggle" @click="toggleDark" title="Toggle dark mode">
+                <i class="fas fa-circle-half-stroke"></i>
+            </button>
+        </div>
+    </header>
+
+    <div v-if="updateAvailable" class="update-banner" @click="onReload">
+        <i class="fas fa-sync-alt"></i> Update available &mdash; click to reload.
+    </div>
+
+    <main class="app-body" :class="{disabled: !connected}">
+
+        <!-- ============================================================
+             App content here.
+             ============================================================ -->
+
+        <!-- Test buttons — remove this block when building a real app -->
+        <div class="button-bar" style="margin-bottom:0.5em">
+            <button @click="toast('Info toast',    'info'   )">Toast info</button>
+            <button @click="toast('Success toast', 'success')">Toast success</button>
+            <button @click="toast('Warning toast', 'warning')">Toast warning</button>
+            <button @click="toast('Danger toast',  'danger' )">Toast danger</button>
+        </div>
+        <div class="hbox" style="gap:0.6em; margin-bottom:0.8em">
+            <button @click="onPing" :disabled="!connected">Ping</button>
+            <input v-model="pingText" placeholder="message text" style="font-size:1em; padding:0.15em 0.4em">
+        </div>
+        <div v-if="pongResult" class="text-muted" style="font-size:0.9em">
+            <strong>pong:</strong> {{pongResult.text}}
+            &mdash; server time {{pongResult.ts}}
+        </div>
+
+    </main>
+
+    <!-- Toast notifications (managed by this.toast()) -->
+    <div class="toast-container">
+        <div v-for="t in toasts" :key="t.id"
+             class="toast" :class="[t.level, {fading: t.fading}]">
+            {{t.message}}
+        </div>
+    </div>
+
+</div><!-- #vue-root -->
+
+<!-- Component templates go here, e.g.:
+<script type="text/html" id="my-widget">
+<div class="my-widget">
+    <slot></slot>
+</div>
+</script>
+-->
+
+<script src="js/vue.global.prod.js"></script>
+<script type="module" src="index.js"></script>
+</body>
+</html>
