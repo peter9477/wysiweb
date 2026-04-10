@@ -68,8 +68,14 @@ async def ws_handler(request):
 
 # ---------------------------------------------------------------------------
 
+async def redirect_root(request):
+    raise web.HTTPFound('/app/index.html')
+
+
 def main():
     app = web.Application()
+    app.router.add_get('/', redirect_root)
+    app.router.add_get('/app/', redirect_root)
     app.router.add_get('/app.ws', ws_handler)
     app.router.add_static('/app/', ROOT, show_index=True)
 
